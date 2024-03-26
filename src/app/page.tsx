@@ -1,4 +1,7 @@
+import { kv } from '@vercel/kv';
+import dayjs from 'dayjs';
 import { google } from 'googleapis';
+import { unstable_noStore as noStore } from 'next/cache';
 import Image from 'next/image';
 import styles from './page.module.css';
 
@@ -8,8 +11,7 @@ const youtubeClient = google.youtube({
     version: 'v3',
 });
 
-async function fetchTotalSubscriberCount() {
-    // @TODO: implement cache
+async function fetchTotalSubscriberCountFromYouTube() {
     const list = await youtubeClient.channels.list({
         part: ['statistics'],
         id: CHANNELS.map((channel) => channel.id),
@@ -24,6 +26,41 @@ async function fetchTotalSubscriberCount() {
         ) ?? 0;
 
     return total;
+}
+
+async function fetchTotalSubscriberCountFromCache() {
+    noStore();
+
+    const count = await kv.get<number>('count');
+    const expiryString = await kv.get<string>('expiry');
+
+    const expiry = expiryString ? dayjs(expiryString) : undefined;
+
+    if (!expiry || dayjs().isAfter(expiry)) {
+        return null;
+    }
+
+    return count;
+}
+
+async function updateCache(count: number) {
+    console.log(`Updating cache value: ${count}`);
+    await kv.set('count', count);
+    await kv.set('expiry', dayjs().add(10, 'minute').toISOString());
+}
+
+async function fetchTotalSubscriberCount() {
+    const countFromCache = await fetchTotalSubscriberCountFromCache();
+
+    if (!countFromCache) {
+        const countFromYouTube = await fetchTotalSubscriberCountFromYouTube();
+
+        await updateCache(countFromYouTube);
+
+        return countFromYouTube;
+    }
+
+    return countFromCache;
 }
 
 const CHANNELS = [

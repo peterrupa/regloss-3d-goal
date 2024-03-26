@@ -127,6 +127,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
     return {
         description,
+        openGraph: {
+            description,
+        },
     };
 }
 

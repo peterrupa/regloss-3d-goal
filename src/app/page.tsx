@@ -1,6 +1,7 @@
 import { kv } from '@vercel/kv';
 import dayjs from 'dayjs';
 import { google } from 'googleapis';
+import { Metadata } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
 import Image from 'next/image';
 import styles from './page.module.css';
@@ -111,6 +112,23 @@ function ProgressBar({ percentage }: { percentage: number }) {
 }
 
 const GOAL_COUNT = 2500000;
+
+export async function generateMetadata(): Promise<Metadata> {
+    const totalSubscribersCount = await fetchTotalSubscriberCount();
+    const percentage = Math.min(
+        (totalSubscribersCount / GOAL_COUNT) * 100,
+        100
+    );
+
+    const description =
+        percentage < 100
+            ? `ReGLOSS has reached ${percentage.toFixed(0)}% of their goal.`
+            : 'ReGLOSS has reached the goal for their 3D debut. Congratulations!';
+
+    return {
+        description,
+    };
+}
 
 export default async function Home() {
     const totalSubscribersCount = await fetchTotalSubscriberCount();

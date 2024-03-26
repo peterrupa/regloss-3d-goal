@@ -122,7 +122,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
     const description =
         percentage < 100
-            ? `ReGLOSS has reached ${percentage.toFixed(0)}% of their goal.`
+            ? `ReGLOSS has reached ${percentage.toFixed(
+                  0
+              )}% of their goal. Current subscribers: ${totalSubscribersCount.toLocaleString()}`
             : 'ReGLOSS has reached the goal for their 3D debut. Congratulations!';
 
     return {

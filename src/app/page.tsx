@@ -138,7 +138,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
     const totalSubscribersCount = await fetchTotalSubscriberCount();
     const percentage = Math.min(
-        (totalSubscribersCount / GOAL_COUNT) * 100,
+        Math.floor((totalSubscribersCount / GOAL_COUNT) * 100),
         100
     );
 

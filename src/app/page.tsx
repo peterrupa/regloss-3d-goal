@@ -47,7 +47,7 @@ async function fetchTotalSubscriberCountFromCache() {
 async function updateCache(count: number) {
     console.log(`Updating cache value: ${count}`);
     await kv.set('count', count);
-    await kv.set('expiry', dayjs().add(10, 'minute').toISOString());
+    await kv.set('expiry', dayjs().add(1, 'minute').toISOString());
 }
 
 async function fetchTotalSubscriberCount() {

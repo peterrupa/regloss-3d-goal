@@ -116,7 +116,7 @@ const GOAL_COUNT = 2500000;
 export async function generateMetadata(): Promise<Metadata> {
     const totalSubscribersCount = await fetchTotalSubscriberCount();
     const percentage = Math.min(
-        (totalSubscribersCount / GOAL_COUNT) * 100,
+        Math.floor((totalSubscribersCount / GOAL_COUNT) * 100),
         100
     );
 

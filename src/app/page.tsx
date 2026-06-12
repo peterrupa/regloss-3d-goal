@@ -106,7 +106,7 @@ export async function generateMetadata(): Promise<Metadata> {
             ? `ReGLOSS has reached ${percentage.toFixed(
                   0,
               )}% of their goal. Current subscribers: ${totalSubscribersCount.toLocaleString()}`
-            : 'ReGLOSS has reached the goal for their 3D debut. Congratulations!';
+            : `ReGLOSS has reached the goal for their 3D debut. Congratulations! Current subscribers: ${totalSubscribersCount.toLocaleString()}`;
 
     return {
         description,
